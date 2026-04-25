@@ -1,33 +1,27 @@
 import numpy as np
-import copy, math
+import copy, math, os
 import matplotlib.pyplot as plt
 
-x_train = np.array([
-    [1000, 20, 1, 2],    # حالة 1: داتا قليلة ومخربقة شوية
-    [5000, 80, 2, 5],    # حالة 2: داتا متوسطة ومخربقة بزاف
-    [10000, 50, 2, 8],   # حالة 3: داتا كبيرة والبيسي مضغوط
-    [500, 10, 1, 1],     # حالة 4: داتا صغيرة ساهلة
-    [20000, 90, 3, 7],   # حالة 5: داتا ضخمة وخوارزمية معقدة
-    [8000, 40, 2, 4],    # حالة 6
-    [15000, 70, 2, 6],   # حالة 7
-    [3000, 30, 1, 3],    # حالة 8
-    [25000, 100, 3, 9],  # حالة 9: أسوأ حالة ممكنة (Worst Case)
-    [12000, 60, 2, 5]    # حالة 10
-])
-y_train = np.array([15.2, 120.5, 340.1, 5.0, 850.3, 190.2, 410.8, 45.6, 1100.5, 290.4])
+current_dir = os.path.dirname(__file__)
+data_path = os.path.join(current_dir, '../data/algo_data.csv')
+data = np.genfromtxt(data_path, delimiter=',', skip_header=1)
 
-w_init = np.zeros(x_train.shape[1])  # shape (4,)print(w_init)
+x_train = data[:, :4]
+y_train = data[:, 4]
+
+array_size_squared = (x_train[:, 0] ** 2).reshape(-1, 1)
+nested_loops_squared = (x_train[:, 2] ** 2).reshape(-1, 1)
+x_train_poly = np.hstack((x_train, array_size_squared, nested_loops_squared))
+
+w_init = np.zeros(x_train_poly.shape[1])
 b_init = 0.
-alpha = 0.1
-iterations = 1000
+alpha = 0.03
+iterations = 2000
 
-ww = w_init
-print(ww)
-
-mu = np.mean(x_train, axis=0)
-sigma = np.std(x_train, axis=0)
+mu = np.mean(x_train_poly, axis=0)
+sigma = np.std(x_train_poly, axis=0)
 sigma_safe = np.where(sigma == 0, 1, sigma)
-x_norm = (x_train - mu)/sigma_safe
+x_norm = (x_train_poly - mu)/sigma_safe
 
 def compute_cost(x, y, w, b):
     m = x.shape[0]
@@ -72,9 +66,38 @@ def gradient_descent(x, y, w_in, b_in, compute_gradient, compute_cost, alpha, nu
 
 w, b, J_history = gradient_descent(x_norm, y_train, w_init, b_init, compute_gradient, compute_cost, alpha, iterations)
 
-x_new = np.array([18000, 75, 2, 6])
-X_norm = (x_new - mu) / sigma_safe
+x_new = np.array([15000, 70, 2, 6])
+x_new_poly = np.array([15000, 70, 2, 6, 15000**2, 2**2])
+X_norm = (x_new_poly - mu) / sigma_safe
 predicte = np.dot(X_norm, w) + b
 
 print(f"Predicted Execution Time: {predicte:.2f} ms")
-    
+
+
+
+
+predictions = np.dot(x_norm, w) + b 
+
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.plot(J_history, color='blue', linewidth=2)
+plt.title("Learning Curve (Gradient Descent)")
+plt.xlabel("Iterations")
+plt.ylabel("Cost (MSE)")
+plt.grid(True, linestyle='--', alpha=0.7)
+
+plt.subplot(1, 2, 2)
+plt.scatter(y_train, predictions, color='purple', alpha=0.5, label='Predictions')
+
+max_val = max(np.max(y_train), np.max(predictions))
+plt.plot([0, max_val], [0, max_val], color='red', linestyle='--', label='Perfect Fit')
+
+plt.title("Actual vs Predicted Execution Time")
+plt.xlabel("Actual Execution Time (ms)")
+plt.ylabel("Predicted Execution Time (ms)")
+plt.legend()
+plt.grid(True, linestyle='--', alpha=0.7)
+
+plt.tight_layout()
+plt.show()
