@@ -65,15 +65,15 @@ pip install -r requirements.txt
 python src/data_generator.py
 ```
 
-Run the models:
+4. Run the models:
 
-4. To see the from-scratch implementation:
+   To see the from-scratch implementation:
 
 ```bash
 python src/predictor_from_scratch.py
 ```
 
-To see the optimized Scikit-Learn implementation:
+   To see the optimized Scikit-Learn implementation:
 
 ```bash
 python src/predictor_sklearn.py
