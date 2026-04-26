@@ -49,7 +49,7 @@ By applying Feature Engineering (Polynomial degree=2) via Scikit-Learn, the mode
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/algo-execution-time-predictor.git
+git clone https://github.com/radix666/algo-execution-time-predictor.git
 cd algo-execution-time-predictor
 ```
 
