@@ -28,6 +28,63 @@ algo-execution-time-predictor/
 └── README.md                      # Project documentation
 ```
 
+## 📊 Results & Visualizations
+
+### 1. The Underfitting Problem (Linear Regression)
+When fitting a straight line to $O(n^2)$ data, the model suffers from High Bias. As seen below, the predictions (purple dots) form a curve and fail to perfectly align with the actual execution times.
+
+(Cost/MSE was relatively high.)
+
+![Linear Regression Underfitting](images/linear_underfitting.png)
+
+### 2. The Solution (Polynomial Regression)
+By applying Feature Engineering (Polynomial degree=2) via Scikit-Learn, the model successfully captures the interaction between variables (like `array_size` and `nested_loops`). The predictions (green dots) now perfectly align with reality.
+
+(Cost/MSE dropped significantly.)
+
+![Polynomial Regression Fit](images/polynomial_perfect_fit.png)
+
+## 🛠️ How to Run Locally
+
+Clone the repository:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/algo-execution-time-predictor.git
+cd algo-execution-time-predictor
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Generate new data (Optional):
+
+```bash
+python src/data_generator.py
+```
+
+Run the models:
+
+To see the from-scratch implementation:
+
+```bash
+python src/predictor_from_scratch.py
+```
+
+To see the optimized Scikit-Learn implementation:
+
+```bash
+python src/predictor_sklearn.py
+```
+
+## 🛠️ Technologies Used
+- Python
+- NumPy (Vectorization & Math)
+- Matplotlib (Data Visualization)
+- Scikit-Learn (Model Training & Feature Scaling)
+
 
 
 
